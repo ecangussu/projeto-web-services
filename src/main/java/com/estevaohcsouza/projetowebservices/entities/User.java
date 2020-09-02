@@ -1,4 +1,4 @@
-package com.estevaohcsouza.projetowebservices.etities;
+package com.estevaohcsouza.projetowebservices.entities;
 
 import java.io.Serializable;
 
@@ -8,12 +8,15 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
+//informar ao JPA que é uma tabela
 public class User implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	
 	@Id
+	//informar que é a chave primária da tabela
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	//campo autoincrementável
 	private Long id;
 	private String name;
 	private String email;
