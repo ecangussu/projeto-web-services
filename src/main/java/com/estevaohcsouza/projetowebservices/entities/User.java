@@ -1,14 +1,22 @@
 package com.estevaohcsouza.projetowebservices.entities;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 //informar ao JPA que é uma tabela
+@Table(name = "tb_user")
+//Nome para a tabela
 public class User implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
@@ -22,6 +30,21 @@ public class User implements Serializable {
 	private String email;
 	private String phone;
 	private String password;
+	
+	/* 
+	 * Associação entre usuários (User) e pedidos (Order)
+	 * Um usuário muitos pedidos (um para muitos > OneToMany) 
+	 * JPA transforma em chave estrangeira no BD 
+	 * 
+	 * Entre parenteses colocar o nome do atributo que tem no outro lado da associação (classe Order) >
+	 * o muitos pra um do outro lado da associação está mapeado pelo atributo client
+	 * 
+	 * JsonIgnore > evitar loop infinito na chamada dos usuários e pedidos (associação de mão dupla) 
+	*/	
+	
+	@JsonIgnore
+	@OneToMany(mappedBy = "client")
+	private List<Order> orders = new ArrayList<>();
 	
 	public User() {
 	}
@@ -72,6 +95,10 @@ public class User implements Serializable {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+	
+	public List<Order> getOrders() {
+		return orders;
 	}
 
 	@Override
