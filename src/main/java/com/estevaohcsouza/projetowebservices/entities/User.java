@@ -34,7 +34,7 @@ public class User implements Serializable {
 	/* 
 	 * Associação entre usuários (User) e pedidos (Order)
 	 * Um usuário muitos pedidos (um para muitos > OneToMany) 
-	 * JPA transforma em chave estrangeira no BD 
+	 * JPA associa com a chave estrangeira de outra tabela 
 	 * 
 	 * Entre parenteses colocar o nome do atributo que tem no outro lado da associação (classe Order) >
 	 * o muitos pra um do outro lado da associação está mapeado pelo atributo client

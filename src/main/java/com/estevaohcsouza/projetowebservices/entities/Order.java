@@ -11,6 +11,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.estevaohcsouza.projetowebservices.entities.enums.OrderStatus;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
@@ -27,6 +28,10 @@ public class Order implements Serializable {
 	//Para garantir que o moment seja mostrado no JSON no formato de string do ISO 8601 > formata o JSON
 	private Instant moment;
 	
+	//Usando integer para mostrar ao banco que estará sendo gravado um número inteiro
+	//Tratamento interno (classe Order) > para o mundo externo manter o tipo OrderStatus
+	private Integer orderStatus;
+	
 	@ManyToOne
 	//Associação entre pedidos (Order) e usuário (User)
 	//Muitos pedidos e um usuário (muitos para um > ManyToOne)
@@ -38,9 +43,10 @@ public class Order implements Serializable {
 	public Order() {
 	}
 
-	public Order(Long id, Instant moment, User client) {
+	public Order(Long id, Instant moment, OrderStatus orderStatus, User client) {
 		this.id = id;
 		this.moment = moment;
+		setOrderStatus(orderStatus);
 		this.client = client;
 	}
 
@@ -58,6 +64,18 @@ public class Order implements Serializable {
 
 	public void setMoment(Instant moment) {
 		this.moment = moment;
+	}
+
+	public OrderStatus getOrderStatus() {
+		//Convertendo valor inteiro para OrderStatus
+		return OrderStatus.valueOf(orderStatus);
+	}
+
+	public void setOrderStatus(OrderStatus orderStatus) {
+		if(orderStatus != null) {
+			//Está recebendo um OrderStatus porém o orderStatus precisa receber um inteiro > usar o getCode
+			this.orderStatus = orderStatus.getCode();			
+		}
 	}
 
 	public User getClient() {
