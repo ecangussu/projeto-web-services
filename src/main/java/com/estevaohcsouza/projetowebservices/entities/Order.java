@@ -73,7 +73,7 @@ public class Order implements Serializable {
 
 	public void setOrderStatus(OrderStatus orderStatus) {
 		if(orderStatus != null) {
-			//Está recebendo um OrderStatus porém o orderStatus precisa receber um inteiro > usar o getCode
+			//Está recebendo um OrderStatus porém o atributo orderStatus precisa receber um inteiro > usar o getCode
 			this.orderStatus = orderStatus.getCode();			
 		}
 	}
