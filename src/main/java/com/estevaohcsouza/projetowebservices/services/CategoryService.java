@@ -19,7 +19,6 @@ public class CategoryService {
 		return categoryRepository.findAll();
 	}
 	
-	//operação para buscar o usuário pelo id
 	public Category findById(Long id) {
 		Optional<Category> obj = categoryRepository.findById(id);
 		return obj.get();
