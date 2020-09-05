@@ -8,8 +8,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
 @Entity
 @Table(name = "tb_product")
@@ -28,10 +30,17 @@ public class Product implements Serializable {
 	//Set = conjunto = garante que um produto nao pode ter uma mesma categoria mais de uma vez
 	//Como o Set é uma interface se usa o HashSet (classe correspondente a interface)
 	//Instanciar para garantir que a coleção não comece nula (irá começar vazia que é != de null)
-	@Transient
-	//Impede que o JPA tente interpretar o código
+	@ManyToMany
+	//Muitos para muitos (muitos produtos para muitas categorias)
+	@JoinTable(name = "tb_product_category", 
+		joinColumns = @JoinColumn(name = "product_id"),
+		inverseJoinColumns = @JoinColumn(name = "category_id"))
+	//Nome da tabela
+	//Quais são as chaves estrangeiras que fazem a associação entre as tabelas de produtos e categorias
+	//joinColumns = @JoinColumn(name = "product_id") > chave estrangeira desa entidade (Product)
+	//inverseJoinColumns > chave estrangeira da outra entidade (categoria)
 	private Set<Category> categories = new HashSet<>();
-	
+
 	public Product() {
 	}
 
@@ -82,7 +91,7 @@ public class Product implements Serializable {
 	public void setImgUrl(String imgUrl) {
 		this.imgUrl = imgUrl;
 	}
-	
+
 	public Set<Category> getCategories() {
 		return categories;
 	}
