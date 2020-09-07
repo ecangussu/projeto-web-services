@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Profile;
 import com.estevaohcsouza.projetowebservices.entities.Category;
 import com.estevaohcsouza.projetowebservices.entities.Order;
 import com.estevaohcsouza.projetowebservices.entities.OrderItem;
+import com.estevaohcsouza.projetowebservices.entities.Payment;
 import com.estevaohcsouza.projetowebservices.entities.Product;
 import com.estevaohcsouza.projetowebservices.entities.User;
 import com.estevaohcsouza.projetowebservices.entities.enums.OrderStatus;
@@ -94,6 +95,13 @@ public class TestConfig implements CommandLineRunner {
 		OrderItem oi4 = new OrderItem(o3, p5, 2, p5.getPrice());
 		
 		orderItemRepository.saveAll(Arrays.asList(oi1, oi2, oi3, oi4));
+		
+		Payment pay1 = new Payment(null, Instant.parse("2019-06-20T21:53:07Z"), o1);
+		//Para salvar um objeto dependente de uma relação um para um (OneToOne)
+		//Associar o pedido 1 (o1) com o pagamento pay1
+		//Pedir para salvar o pedido = JPA irá se encarregar de salvar o pagamento deste pedido
+		o1.setPayment(pay1);
+		orderRepository.save(o1);
 		
 	}	
 
