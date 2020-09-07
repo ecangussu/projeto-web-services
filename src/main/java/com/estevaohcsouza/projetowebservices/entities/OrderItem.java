@@ -67,6 +67,11 @@ public class OrderItem implements Serializable {
 	public void setPrice(Double price) {
 		this.price = price;
 	}
+	
+	// Na plataforma JavaInterprise o que "vale" é o get para ser reconhecido e parecer no JSON
+	public Double getSubTotal() {
+		return price * quantity;
+	}
 
 	@Override
 	public int hashCode() {
