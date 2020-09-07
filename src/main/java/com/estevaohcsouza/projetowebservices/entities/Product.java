@@ -11,7 +11,10 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "tb_product")
@@ -40,6 +43,12 @@ public class Product implements Serializable {
 	//joinColumns = @JoinColumn(name = "product_id") > chave estrangeira desa entidade (Product)
 	//inverseJoinColumns > chave estrangeira da outra entidade (categoria)
 	private Set<Category> categories = new HashSet<>();
+	
+	@OneToMany(mappedBy = "id.product")
+	//set = não permite repetições do mesmo item
+	//coleção de OrderItem associado ao Product
+	//id = classe OrderItem > product = classe OrderItemPK
+	private Set<OrderItem> items = new HashSet<>();
 
 	public Product() {
 	}
@@ -94,6 +103,17 @@ public class Product implements Serializable {
 
 	public Set<Category> getCategories() {
 		return categories;
+	}
+	
+	@JsonIgnore
+	public Set<Order> getOrders() {
+		//percorrendo a coleção items (coleção de OrderItem associada ao produto) 
+		//para cada elemento desta coleção eu adiciono na minha coleção set o pedido (order) relacionado ao OrderItem
+		Set<Order> set = new HashSet<>();
+		for(OrderItem x : items) {
+			set.add(x.getOrder());
+		}
+		return set;
 	}
 
 	@Override
