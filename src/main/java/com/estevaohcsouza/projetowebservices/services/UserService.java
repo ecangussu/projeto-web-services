@@ -40,5 +40,23 @@ public class UserService {
 	public void delete(Long id) {
 		userRepository.deleteById(id);
 	}
+	
+	//operação para atualizar os dados de um usuário no BD
+	//irá retornar um usuário atualizado
+	public User update(Long id, User obj) {
+		//entity > objeto monitorado pelo JPA
+		//getOne > instancia um usuário sem acessar o BD > prepara o objeto monitorado para serem realizadas as alterações para depois efetuar operações com o BD
+		User entity = userRepository.getOne(id);
+		//Atualizar os dados da entidade baseado nos dados que chegaram no objeto
+		updateData(entity, obj);
+		//Salvar no BD o entity
+		return userRepository.save(entity);
+	}
+
+	private void updateData(User entity, User obj) {
+		entity.setName(obj.getName());
+		entity.setEmail(obj.getEmail());
+		entity.setPhone(obj.getPhone());
+	}	
 
 }
