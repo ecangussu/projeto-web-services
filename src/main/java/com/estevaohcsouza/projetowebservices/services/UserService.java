@@ -28,5 +28,12 @@ public class UserService {
 		return obj.get();
 		//o get retorna um objeto do tipo User que estiver dentro do optional (representado pelo obj)
 	}
+	
+	//operação para salvar um novo usuário no BD
+	//operação irá retornar o usuário salvo
+	//método save(obj) retorna o próprio objeto
+	public User insert(User obj) {
+		return userRepository.save(obj);
+	}
 
 }

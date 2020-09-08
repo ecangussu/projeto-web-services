@@ -1,25 +1,28 @@
 package com.estevaohcsouza.projetowebservices.resources;
 
+import java.net.URI;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.estevaohcsouza.projetowebservices.entities.User;
 import com.estevaohcsouza.projetowebservices.services.UserService;
 
 @RestController
-//recurso Web que é implementado por um controlador rest
 @RequestMapping(value = "/users")
 //para dar um nome ao recurso 
 public class UserResource {
 	
 	/*
-	 * Essa classe irá disponibilizar um recurso Web correspondente a entidade User
+	 * Essa classe é um controlador rest e irá disponibilizar um recurso Web correspondente a entidade User
 	 * 
 	 * Component Registration
 	 * A classe que será injetada como dependência (UserService) tem de estar registrada como um componente do spring
@@ -38,6 +41,7 @@ public class UserResource {
 	
 	@GetMapping
 	//getmapping: método que responde a requisição do tipo get do http
+	//Requisição do tipo get: recuperar dados do BD
 	//Método: endpoint para acessar users 
 	//ResponseEntity: tipo específico do spring para retornar respostas de requisições web
 	public ResponseEntity<List<User>> findAll() {
@@ -57,5 +61,18 @@ public class UserResource {
 		return ResponseEntity.ok().body(obj);
 	}
 	
+	@PostMapping
+	//Requisição do tipo post: inserir dados no BD
+	//Objeto obj irá chegar pelo modo JSON após feita a requisição > JSON será desserializado para um Objeto User do Java > Usar RequestBody
+	//Mais adequado usar o código de resposta 201 > significa que criou um novo recurso
+	public ResponseEntity<User> insert(@RequestBody User obj) {
+		obj = userService.insert(obj);
+		//Método created espera um objeto do tipo URI > no padrão http quando é retornado um 201 é esperado que a resposta contenha um cabeçalho (location) contendo o endereço do novo recurso inserido
+		//Forma padrão do spring de gerar o endereço onde se encontra o novo recurso inserido
+		//No caso o caminho será user/{id do novo recurso inserido} > por isso usar /{id}
+		//O id do objeto inserido estará no obj (pois foi o novo recurso inserido) > obj.getId()
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
+		return ResponseEntity.created(uri).body(obj);
+	}
 	
 }
