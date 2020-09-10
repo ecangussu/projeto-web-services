@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.estevaohcsouza.projetowebservices.entities.User;
 import com.estevaohcsouza.projetowebservices.repositories.UserRepository;
+import com.estevaohcsouza.projetowebservices.services.exceptions.ResourceNotFoundException;
 
 @Service
 public class UserService {
@@ -25,7 +26,9 @@ public class UserService {
 	public User findById(Long id) {
 		Optional<User> obj = userRepository.findById(id);
 		//O findByAdd retorna um objeto do tipo Optional
-		return obj.get();
+		return obj.orElseThrow(() -> new ResourceNotFoundException(id));
+		//orElseThrow = irá tentar dar o get, se não encontrar um usuário irá lançar uma exceção
+		//return obj.get(); > método usado antes da inserção da exception
 		//o get retorna um objeto do tipo User que estiver dentro do optional (representado pelo obj)
 	}
 	
