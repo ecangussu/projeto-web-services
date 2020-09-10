@@ -3,6 +3,8 @@ package com.estevaohcsouza.projetowebservices.services;
 import java.util.List;
 import java.util.Optional;
 
+import javax.persistence.EntityNotFoundException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -57,13 +59,18 @@ public class UserService {
 	//operação para atualizar os dados de um usuário no BD
 	//irá retornar um usuário atualizado
 	public User update(Long id, User obj) {
-		//entity > objeto monitorado pelo JPA
-		//getOne > instancia um usuário sem acessar o BD > prepara o objeto monitorado para serem realizadas as alterações para depois efetuar operações com o BD
-		User entity = userRepository.getOne(id);
-		//Atualizar os dados da entidade baseado nos dados que chegaram no objeto
-		updateData(entity, obj);
-		//Salvar no BD o entity
-		return userRepository.save(entity);
+		try {
+			//entity > objeto monitorado pelo JPA
+			//getOne > instancia um usuário sem acessar o BD > prepara o objeto monitorado para serem realizadas as alterações para depois efetuar operações com o BD
+			User entity = userRepository.getOne(id);
+			//Atualizar os dados da entidade baseado nos dados que chegaram no objeto
+			updateData(entity, obj);
+			//Salvar no BD o entity
+			return userRepository.save(entity);			
+		}
+		catch(EntityNotFoundException e) {
+			throw new ResourceNotFoundException(id);
+		}
 	}
 
 	private void updateData(User entity, User obj) {
