@@ -4,10 +4,13 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import com.estevaohcsouza.projetowebservices.entities.User;
 import com.estevaohcsouza.projetowebservices.repositories.UserRepository;
+import com.estevaohcsouza.projetowebservices.services.exceptions.DatabaseException;
 import com.estevaohcsouza.projetowebservices.services.exceptions.ResourceNotFoundException;
 
 @Service
@@ -41,7 +44,14 @@ public class UserService {
 	
 	//operação para remover um usuário no BD
 	public void delete(Long id) {
-		userRepository.deleteById(id);
+		try {
+			userRepository.deleteById(id);			
+		} 
+		catch(EmptyResultDataAccessException e) {
+			throw new ResourceNotFoundException(id);
+		} catch(DataIntegrityViolationException e) {
+			throw new DatabaseException(e.getMessage());
+		}
 	}
 	
 	//operação para atualizar os dados de um usuário no BD
