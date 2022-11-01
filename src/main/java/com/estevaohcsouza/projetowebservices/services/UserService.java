@@ -62,6 +62,7 @@ public class UserService {
 		try {
 			//entity > objeto monitorado pelo JPA
 			//getOne > instancia um usuário sem acessar o BD > prepara o objeto monitorado para serem realizadas as alterações para depois efetuar operações com o BD
+			//Obs.: nas novas versões do spring não se usa mais o getOne(id) e sim o getReferenceById(id)
 			User entity = userRepository.getOne(id);
 			//Atualizar os dados da entidade baseado nos dados que chegaram no objeto
 			updateData(entity, obj);
